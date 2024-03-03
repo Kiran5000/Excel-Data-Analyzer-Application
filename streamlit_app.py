@@ -5,13 +5,8 @@ import openpyxl
 import pandas as pd
 from lyzr import DataConnector, DataAnalyzr
 
-# Load OpenAI API key from environment variable
-api_key = os.getenv("OPENAI_API_KEY")
-
-# Check if API key is provided
-if not api_key:
-    st.error("OpenAI API key is missing. Please provide the API key as an environment variable.")
-    st.stop()
+# Load OpenAI API key from Streamlit Secrets
+api_key = st.secrets["OPENAI_API_KEY"]
 
 st.title("Excel Data Analyzer")
 
