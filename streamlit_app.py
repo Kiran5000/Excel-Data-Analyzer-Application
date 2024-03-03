@@ -3,10 +3,12 @@ import streamlit as st
 import openpyxl
 import pandas as pd
 from lyzr import DataConnector, DataAnalyzr
+
 st.title("Excel Data Analyzer")
 
-# API key
-api_key =st.secrets["api_key"]
+# Ask for OpenAI API key
+api_key = st.text_input("Enter your OpenAI API key")
+
 uploaded_file = st.file_uploader("Upload your Excel file", type="xlsx")
 sheet_name = None
 
@@ -71,4 +73,3 @@ if uploaded_file:
                 if submitted_tasks:
                     tasks = data_analyzr.tasks(user_input=user_input_tasks)
                     st.write(tasks)
-
