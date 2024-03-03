@@ -1,8 +1,12 @@
 import openai
 import streamlit as st
+import os
 import openpyxl
 import pandas as pd
 from lyzr import DataConnector, DataAnalyzr
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+os.environ["OPENAI_API_KEY"] = openai.api_key
 
 st.title("Excel Data Analyzer")
 
@@ -18,7 +22,13 @@ if api_key:
 
         if sheet_name:
             df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
-            data_analyzr = DataAnalyzr(df=df, api_key=api_key)
+
+            # Initialize DataAnalyzr with error handling
+            try:
+                data_analyzr = DataAnalyzr(df=df, api_key=api_key)
+            except Exception as e:
+                st.error(f"Error initializing DataAnalyzr: {e}")
+                st.stop()  # Stop execution if initialization fails
 
             # Button layout in a vertical stack
             with st.expander("Choose an action"):
