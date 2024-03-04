@@ -1,8 +1,10 @@
 import streamlit as st
 from lyzr import VoiceBot
 import tempfile
-import base64
+import shutil
 import os
+import io
+import base64
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -41,9 +43,10 @@ def main():
             # Convert text to speech
             audio_bytes = vb.text_to_speech(text)
             # Save audio to a temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
-                temp_audio_file.write(audio_bytes)
-                audio_file_path = temp_audio_file.name
+            with io.BytesIO(audio_bytes) as audio_buffer:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
+                    shutil.copyfileobj(audio_buffer, temp_audio_file)
+                    audio_file_path = temp_audio_file.name
             # Provide download link to the user
             st.audio(audio_bytes, format='audio/wav')
             st.success("Text converted to speech successfully.")
