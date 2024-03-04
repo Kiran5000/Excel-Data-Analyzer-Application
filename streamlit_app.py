@@ -4,6 +4,7 @@ import os
 import streamlit as st
 import openpyxl
 import pandas as pd
+import numpy as np
 from lyzr import DataConnector, DataAnalyzr
 
 # Load OpenAI API key from Streamlit Secrets
