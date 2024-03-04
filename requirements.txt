@@ -2,3 +2,5 @@ lyzr
 streamlit
 openai
 openpyxl
+pandas
+numpy
