@@ -8,6 +8,42 @@ import numpy as np
 import streamlit as st
 from lyzr import DataConnector, DataAnalyzr
 
+class DataAnalyzr:
+    def __init__(self, df, api_key):
+        self.df = df
+        self.api_key = api_key
+
+    def analysis_insights(self, user_input):
+        # Dummy implementation for analysis insights
+        return f"Analysis insights for: {user_input}"
+
+    def visualizations(self, user_input):
+        # Dummy implementation for visualizations
+        return f"Visualizations for: {user_input}"
+
+    def dataset_description(self):
+        # Dummy implementation for dataset description
+        return "Dataset description"
+
+    def ai_queries_df(self):
+        # Dummy implementation for AI queries DataFrame
+        return pd.DataFrame({'Query': ['Query 1', 'Query 2'], 'Response': ['Response 1', 'Response 2']})
+
+    def analysis_recommendation(self):
+        # Dummy implementation for analysis recommendation
+        return "Analysis recommendation"
+
+    def recommendations(self, user_input):
+        # Dummy implementation for recommendations
+        return f"Recommendations for: {user_input}"
+
+    def tasks(self, user_input):
+        # Dummy implementation for tasks
+        return f"Tasks for: {user_input}"
+
+# Your Streamlit app code with modifications to use the dummy DataAnalyzr class
+
+
 def main():
     st.title("Excel Data Analyzer")
 
