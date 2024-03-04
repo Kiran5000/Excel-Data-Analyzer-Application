@@ -5,6 +5,7 @@ import shutil
 import os
 import io
 import base64
+from pydub import AudioSegment
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -42,13 +43,17 @@ def main():
         if st.button("Convert"):
             # Convert text to speech
             audio_bytes = vb.text_to_speech(text)
+            # Convert WAV audio to MP3 format
+            audio = AudioSegment.from_wav(io.BytesIO(audio_bytes))
+            with io.BytesIO() as output_buffer:
+                audio.export(output_buffer, format="mp3")
+                mp3_audio_bytes = output_buffer.getvalue()
             # Save audio to a temporary file
-            with io.BytesIO(audio_bytes) as audio_buffer:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
-                    shutil.copyfileobj(audio_buffer, temp_audio_file)
-                    audio_file_path = temp_audio_file.name
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio_file:
+                temp_audio_file.write(mp3_audio_bytes)
+                audio_file_path = temp_audio_file.name
             # Provide download link to the user
-            st.audio(audio_bytes, format='audio/wav')
+            st.audio(mp3_audio_bytes, format='audio/mp3')
             st.success("Text converted to speech successfully.")
             st.markdown(get_binary_file_downloader_html(audio_file_path, 'Audio File'), unsafe_allow_html=True)
             os.unlink(audio_file_path)  # Delete the temporary audio file after providing download link
