@@ -3,7 +3,7 @@ from lyzr import VoiceBot
 import io
 
 # Load the API key from secrets.toml
-api_key = st.secrets["openai_api_key"]
+api_key = st.secrets["OPENAI_API_KEY"]
 
 # Initialize the VoiceBot with your OpenAI API key
 vb = VoiceBot(api_key=api_key)
