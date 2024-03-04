@@ -44,21 +44,20 @@ def main():
             # Convert text to speech
             audio_bytes = vb.text_to_speech(text)
             # Save audio to a temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
-                temp_audio_file.write(audio_bytes)
-                audio_file_path = temp_audio_file.name
+            temp_audio_file_path = os.path.join(tempfile.gettempdir(), "output.wav")
+            with open(temp_audio_file_path, "wb") as temp_audio_file:
+                shutil.copyfileobj(io.BytesIO(audio_bytes), temp_audio_file)
             # Provide download link to the user
             st.audio(audio_bytes, format='audio/wav')
             st.success("Text converted to speech successfully.")
             # Save audio file to specified directory
-            save_audio_to_directory(audio_bytes, AUDIO_DIR)
+            save_audio_to_directory(temp_audio_file_path, AUDIO_DIR)
             st.markdown(f"Audio file saved to directory: `{AUDIO_DIR}`")
 
 # Function to save audio file to a specified directory
-def save_audio_to_directory(audio_bytes, directory):
+def save_audio_to_directory(audio_file_path, directory):
     os.makedirs(directory, exist_ok=True)
-    with tempfile.NamedTemporaryFile(dir=directory, delete=False, suffix=".wav") as temp_audio_file:
-        temp_audio_file.write(audio_bytes)
+    shutil.move(audio_file_path, os.path.join(directory, os.path.basename(audio_file_path)))
 
 if __name__ == "__main__":
     main()
