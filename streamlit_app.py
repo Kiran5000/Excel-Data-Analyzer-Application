@@ -1,55 +1,47 @@
-import os
-import openai
-import lyzr
 import streamlit as st
-from lyzr import ChatBot
+from lyzr import VoiceBot
+import io
+import tempfile
 
-# Function to initialize the ChatBot with a text file
-def initialize_chatbot(text_file_path, api_key):
-    # Define parameters for the Weaviate vector store
-    # You can choose either an external Weaviate cluster or local Embedded Weaviate vector store
-    # Replace the placeholders with actual values if using an external Weaviate cluster
-    vector_store_params = {
-        "vector_store_type": "WeaviateVectorStore",
-        "url": "https://sample..weaviate.network",
-        "api_key": "DB_API_KEY",
-        "index_name": "IndexName"  # first letter should be capital
-    }
-    
-    # Initialize the ChatBot with the text file
-    chatbot = ChatBot.txt_chat(input_files=[text_file_path], vector_store_params=vector_store_params)
-    return chatbot
+# Load the API key from secrets.toml
+api_key = st.secrets["OPENAI_API_KEY"]
 
-# Function to query the ChatBot with a given question
-def query_chatbot(chatbot, question):
-    # Ask a question related to the text content
-    response = chatbot.chat(question)
-    return response.response
+# Initialize the VoiceBot with your OpenAI API key
+vb = VoiceBot(api_key=api_key)
+
+# Set page configuration
+st.set_page_config(
+    page_title="Voice Bot",
+    page_icon=":microphone:",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 def main():
-    st.title("Docx ChatBot")
+    st.title("🎙️ Voice Bot 🤖")
 
-    # Retrieve the API key from Streamlit secrets
-    api_key = st.secrets["OPENAI_API_KEY"]
+    # Sidebar options
+    option = st.sidebar.selectbox("Select Option", ["Text to Notes", "Text to Speech"])
 
-    # Get the path to the text file from user input
-    text_file_path = st.text_input("Enter the path to your text file (e.g., /path/to/your/file.txt):")
-    
-    # Initialize the ChatBot
-    if text_file_path:
-        chatbot = initialize_chatbot(text_file_path, api_key)
+    if option == "Text to Notes":
+        # Text input for text-to-notes functionality
+        text = st.text_area("Enter Text")
+        if st.button("Convert"):
+            # Convert text to notes
+            notes = vb.text_to_notes(text)
+            st.write("Notes:")
+            st.write(notes)
+            st.success("Text converted to notes successfully.")
 
-        # Get the question from user input
-        question = st.text_input("Enter your question:")
+    elif option == "Text to Speech":
+        # Text input for text-to-speech functionality
+        text = st.text_area("Enter Text")
+        if st.button("Convert"):
+            # Convert text to speech
+            vb.text_to_speech(text)
+            st.write("Text converted to speech. Check the output audio file.")
+            st.success("Text converted to speech successfully.")
 
-        # Query the ChatBot with the question
-        if st.button("Ask"):
-            if question:
-                response = query_chatbot(chatbot, question)
-                st.write("ChatBot's Response:")
-                st.write(response)
-            else:
-                st.warning("Please enter a question.")
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,3 @@
 lyzr
 streamlit
 openai
-youtube-transcript-api
