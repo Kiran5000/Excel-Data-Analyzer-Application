@@ -18,13 +18,7 @@ if uploaded_file:
 
     if sheet_name:
         df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
-
-        # Initialize DataAnalyzr with error handling
-        try:
-            data_analyzr = DataAnalyzr(df=df, api_key=api_key)
-        except Exception as e:
-            st.error(f"Error initializing DataAnalyzr: {e}")
-            st.stop()  # Stop execution if initialization fails
+        data_analyzr = DataAnalyzr(df=df, api_key=api_key)
 
         # Button layout in a vertical stack
         with st.expander("Choose an action"):
