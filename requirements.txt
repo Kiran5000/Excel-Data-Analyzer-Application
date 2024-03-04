@@ -1,6 +1,4 @@
 lyzr
 streamlit
 openai
-openpyxl
-pandas
-numpy
+youtube-transcript-api
