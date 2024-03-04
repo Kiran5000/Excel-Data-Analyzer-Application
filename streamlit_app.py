@@ -1,8 +1,7 @@
 import streamlit as st
 from lyzr import VoiceBot
-import os
 import tempfile
-import shutil
+import os
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -17,9 +16,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
-# Directory to save audio files
-AUDIO_DIR = "audio_files"
 
 def main():
     st.title("🎙️ Voice Bot 🤖")
@@ -44,20 +40,18 @@ def main():
             # Convert text to speech
             audio_bytes = vb.text_to_speech(text)
             # Save audio to a temporary file
-            temp_audio_file_path = os.path.join(tempfile.gettempdir(), "output.wav")
-            with open(temp_audio_file_path, "wb") as temp_audio_file:
-                shutil.copyfileobj(io.BytesIO(audio_bytes), temp_audio_file)
-            # Provide download link to the user
-            st.audio(audio_bytes, format='audio/wav')
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
+                temp_audio_file.write(audio_bytes)
+                audio_file_path = temp_audio_file.name
+            # Automatically download the audio file to the default location
+            st.audio(audio_bytes, format='audio/wav', filename="output_audio.wav")
             st.success("Text converted to speech successfully.")
-            # Save audio file to specified directory
-            save_audio_to_directory(temp_audio_file_path, AUDIO_DIR)
-            st.markdown(f"Audio file saved to directory: `{AUDIO_DIR}`")
 
-# Function to save audio file to a specified directory
-def save_audio_to_directory(audio_file_path, directory):
-    os.makedirs(directory, exist_ok=True)
-    shutil.move(audio_file_path, os.path.join(directory, os.path.basename(audio_file_path)))
+# Function to download files to the default location
+def download_file(file_path):
+    with open(file_path, "rb") as file:
+        file_bytes = file.read()
+    st.download_button(label="Click here to download the audio file", data=file_bytes, file_name="output_audio.wav")
 
 if __name__ == "__main__":
     main()
