@@ -20,7 +20,7 @@ def main():
     st.title("🎙️ Voice Bot 🤖")
 
     # Sidebar options
-    option = st.sidebar.selectbox("Select Option", ["Text to Notes", "Text to Speech", "Transcription"])
+    option = st.sidebar.selectbox("Select Option", ["Text to Notes", "Text to Speech"])
 
     if option == "Text to Notes":
         # Text input for text-to-notes functionality
