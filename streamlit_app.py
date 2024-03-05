@@ -1,7 +1,5 @@
 import streamlit as st
 from lyzr import VoiceBot
-import tempfile
-import os
 import base64
 
 # Load the API key from secrets.toml
@@ -40,20 +38,14 @@ def main():
         if st.button("Convert"):
             # Convert text to speech
             audio_bytes = vb.text_to_speech(text)
-            # Save audio to a temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
-                temp_audio_file.write(audio_bytes)
-                audio_file_path = temp_audio_file.name
-            # Display audio for playback
-            st.audio(audio_bytes, format='audio/wav')
-            st.success("Text converted to speech successfully.")
             # Provide download link to the user for MP3 format
             st.markdown(get_binary_file_downloader_html(audio_bytes, "output_audio.mp3"), unsafe_allow_html=True)
+            st.success("Text converted to speech successfully.")
 
 # Function to generate a download link for files
 def get_binary_file_downloader_html(data, file_name, file_label='File'):
     b64 = base64.b64encode(data).decode()
-    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{file_name}">{file_label}</a>'
+    href = f'<a href="data:audio/mpeg;base64,{b64}" download="{file_name}">{file_label}</a>'
     return href
 
 if __name__ == "__main__":
