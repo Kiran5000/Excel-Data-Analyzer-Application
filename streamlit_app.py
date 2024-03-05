@@ -2,6 +2,8 @@ import streamlit as st
 from lyzr import VoiceBot
 import tempfile
 import os
+import io
+from pydub import AudioSegment
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -39,17 +41,14 @@ def main():
         if st.button("Convert"):
             # Convert text to speech
             audio_bytes = vb.text_to_speech(text)
-            # Save audio to a temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
-                temp_audio_file.write(audio_bytes)
-                audio_file_path = temp_audio_file.name
-            # Automatically download the audio file to the default location
-            st.audio(audio_bytes, format='audio/wav', filename="output_audio.wav")
+            # Convert audio to MP3 format
+            audio = AudioSegment.from_wav(io.BytesIO(audio_bytes))
+            with io.BytesIO() as output_buffer:
+                audio.export(output_buffer, format="mp3")
+                mp3_audio_bytes = output_buffer.getvalue()
+            # Provide download link to the user
+            st.audio(mp3_audio_bytes, format='audio/mp3')
             st.success("Text converted to speech successfully.")
-            # Send the file for download
-            st.write("Your file is downloading...")
-            st.write("![your_file](data:audio/wav;base64,{})".format(audio_bytes.decode()))
-            st.write("Download [output_audio.wav](data:audio/wav;base64,{})".format(audio_bytes.decode()), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
