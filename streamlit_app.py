@@ -1,6 +1,7 @@
 import streamlit as st
 from lyzr import VoiceBot
 import base64
+import openai
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
