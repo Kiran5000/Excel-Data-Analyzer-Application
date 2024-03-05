@@ -1,7 +1,6 @@
 import openai
 import streamlit as st
 from lyzr import VoiceBot
-import base64
 import tempfile
 
 # Load the API key from secrets.toml
@@ -63,7 +62,7 @@ def main():
         if audio_file is not None:
             try:
                 # Save the uploaded audio file to a temporary location
-                with tempfile.NamedTemporaryFile(delete=False) as temp_audio:
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_audio:
                     temp_audio.write(audio_file.read())
                     temp_audio_path = temp_audio.name
                 
