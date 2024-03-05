@@ -2,16 +2,13 @@ import openai
 import streamlit as st
 from lyzr import VoiceBot
 import base64
-
+import tempfile
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
 
 # Initialize the VoiceBot with your OpenAI API key
-try:
-    vb = VoiceBot(api_key=api_key)
-except Exception as e:
-    st.error(f"Error initializing VoiceBot: {e}")
+vb = VoiceBot(api_key=api_key)
 
 # Set page configuration
 st.set_page_config(
@@ -65,8 +62,13 @@ def main():
         audio_file = st.file_uploader("Upload audio file for transcription", type=["flac", "m4a", "mp3", "mp4", "mpeg", "mpga", "oga", "ogg", "wav", "webm"])
         if audio_file is not None:
             try:
+                # Save the uploaded audio file to a temporary location
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_audio:
+                    temp_audio.write(audio_file.read())
+                    temp_audio_path = temp_audio.name
+                
                 # Transcribe audio file
-                transcript = vb.transcribe(audio_file)
+                transcript = vb.transcribe(temp_audio_path)
                 st.write("Transcription:")
                 st.write(transcript)
                 st.success("Audio file transcribed successfully.")
