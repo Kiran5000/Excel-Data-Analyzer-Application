@@ -1,8 +1,8 @@
+import openai
 import streamlit as st
 from lyzr import VoiceBot
 import base64
 import tempfile
-import openai
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -49,8 +49,7 @@ def main():
                     st.audio(audio_bytes, format='audio/mp3')
                     
                     # Provide download link for the generated audio
-                    href = f'<a href="data:audio/mp3;base64,{base64.b64encode(audio_bytes).decode()}" download="output_audio.mp3">Download Audio</a>'
-                    st.markdown(href, unsafe_allow_html=True)
+                    st.markdown(get_binary_file_downloader_html(audio_bytes, "output_audio.mp3"), unsafe_allow_html=True)
                     
                     st.success("Text converted to speech successfully.")
                 else:
@@ -60,7 +59,7 @@ def main():
 
     elif option == "Transcription":
         # Audio file upload for transcription functionality
-        audio_file = st.file_uploader("Upload audio file for transcription", type=["mp3", "wav"])
+        audio_file = st.file_uploader("Upload audio file for transcription", type=["flac", "m4a", "mp3", "mp4", "mpeg", "mpga", "oga", "ogg", "wav", "webm"])
         if audio_file is not None:
             try:
                 # Save the uploaded audio file to a temporary location
@@ -75,6 +74,11 @@ def main():
                 st.success("Audio file transcribed successfully.")
             except Exception as e:
                 st.error(f"Error transcribing audio file: {e}")
+
+# Function to generate a download link for files
+def get_binary_file_downloader_html(data, file_name, file_label='Download Audio'):
+    href = f'<a href="data:audio/mp3;base64,{base64.b64encode(data).decode()}" download="{file_name}">{file_label}</a>'
+    return href
 
 if __name__ == "__main__":
     main()
