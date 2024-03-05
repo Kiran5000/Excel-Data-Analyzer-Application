@@ -1,6 +1,7 @@
 import openai
 import streamlit as st
 from lyzr import VoiceBot
+import base64
 import tempfile
 
 # Load the API key from secrets.toml
