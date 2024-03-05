@@ -43,14 +43,17 @@ def main():
             try:
                 # Convert text to speech
                 audio_bytes = vb.text_to_speech(text)
-                
-                # Provide download link to the user for MP3 format
-                st.audio(audio_bytes, format='audio/mp3')
-                st.success("Text converted to speech successfully.")
-
-                # Provide download link for the generated audio
-                href = f'<a href="data:audio/mp3;base64,{base64.b64encode(audio_bytes).decode()}" download="output_audio.mp3">Download Audio</a>'
-                st.markdown(href, unsafe_allow_html=True)
+                if audio_bytes:
+                    # Provide audio player for playback
+                    st.audio(audio_bytes, format='audio/mp3')
+                    
+                    # Provide download link for the generated audio
+                    href = f'<a href="data:audio/mp3;base64,{base64.b64encode(audio_bytes).decode()}" download="output_audio.mp3">Download Audio</a>'
+                    st.markdown(href, unsafe_allow_html=True)
+                    
+                    st.success("Text converted to speech successfully.")
+                else:
+                    st.error("Text conversion to speech failed.")
             except Exception as e:
                 st.error(f"Error: {e}")
 
