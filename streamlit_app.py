@@ -40,12 +40,13 @@ def main():
             audio_bytes = vb.text_to_speech(text)
             # Provide download link to the user for MP3 format
             st.markdown(get_binary_file_downloader_html(audio_bytes, "output_audio.mp3"), unsafe_allow_html=True)
+            st.audio(audio_bytes, format='audio/mp3')
             st.success("Text converted to speech successfully.")
 
 # Function to generate a download link for files
-def get_binary_file_downloader_html(data, file_name, file_label='File'):
+def get_binary_file_downloader_html(data, file_name, file_label='Download Audio'):
     b64 = base64.b64encode(data).decode()
-    href = f'<a href="data:audio/mpeg;base64,{b64}" download="{file_name}">{file_label}</a>'
+    href = f'<a href="data:audio/mp3;base64,{b64}" download="{file_name}">{file_label}</a>'
     return href
 
 if __name__ == "__main__":
