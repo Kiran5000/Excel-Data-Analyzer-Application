@@ -1,5 +1,4 @@
 import openai
-import tempfile
 import streamlit as st
 from lyzr import VoiceBot
 import base64
