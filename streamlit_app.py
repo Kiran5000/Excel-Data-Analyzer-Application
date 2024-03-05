@@ -1,6 +1,7 @@
 import streamlit as st
 from lyzr import VoiceBot
 import base64
+import tempfile
 import openai
 
 # Load the API key from secrets.toml
@@ -34,7 +35,7 @@ def main():
                 st.write(notes)
                 st.success("Text converted to notes successfully.")
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"Error converting text to notes: {e}")
 
     elif option == "Text to Speech":
         # Text input for text-to-speech functionality
@@ -55,7 +56,7 @@ def main():
                 else:
                     st.error("Text conversion to speech failed.")
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"Error converting text to speech: {e}")
 
     elif option == "Transcription":
         # Audio file upload for transcription functionality
@@ -73,7 +74,7 @@ def main():
                 st.write(transcript)
                 st.success("Audio file transcribed successfully.")
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"Error transcribing audio file: {e}")
 
 if __name__ == "__main__":
     main()
