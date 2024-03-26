@@ -3,6 +3,7 @@ from lyzr import VoiceBot
 import tempfile
 import openai
 import base64
+import matplotlib.pyplot as plt
 
 # Load the API key from secrets.toml
 api_key = st.secrets["OPENAI_API_KEY"]
