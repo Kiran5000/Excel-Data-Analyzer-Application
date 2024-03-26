@@ -1,3 +1,5 @@
 lyzr
 streamlit
 openai
+matplotlib
+pandas
